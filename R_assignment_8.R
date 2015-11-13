@@ -1,5 +1,5 @@
 library(dplyr)
-
+library(tidyr)
 #here is a funciton to get the mammal size data
 # this code is part of problem 1
 get_data <- function(){
@@ -32,12 +32,32 @@ get_mean_size_extant_exticnt <- function(df){
 
 
 
+
+#here is a function to calculate the mean mass of extant species and of extinct species by contenient
+# this code is part of problem 3.  
+get_mean_size_continent <- function(df){
+  #this fuction takes a data frame of mammal sizes, and returns the mean mass of extant and extinct species
+    mean_status_continent<- df %>%
+    select(continent,status, order,species,combined_mass) %>% #select the needed collumns
+    filter(status == "extinct"|status=="extant") %>% #filer for only extant and extinct
+    na.omit() %>%                                    #omit NAs for mean
+    group_by(continent,status) %>%                               # group by extant vs extinct
+    summarize(mean_mass= mean(combined_mass))         # mean of each group. 
+    cleaned <- spread(mean_status_continent,key=status,mean_mass) #this uses tidyr to make a collumn for extant and extinct
+    
+  return(cleaned)
+}
+
+
+
+
 mammal_sizes <- get_data()
 head(mammal_sizes)
 
 
 mean_sizes <- get_mean_size_extant_exticnt(mammal_sizes)
-meanmean_sizes
+mean_sizes
 
-
+by_continent <- get_mean_size_continent(mammal_sizes)
+by_continent
 
