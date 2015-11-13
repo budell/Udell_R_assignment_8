@@ -1,5 +1,6 @@
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 #here is a funciton to get the mammal size data
 # this code is part of problem 1
 get_data <- function(){
@@ -60,4 +61,16 @@ mean_sizes
 
 by_continent <- get_mean_size_continent(mammal_sizes)
 by_continent
+
+##filtered mammals sizes input for the plot below
+gg_input <- filter(mammal_sizes,status=="extant"|status=="extinct")
+gg_input <- filter(gg_input,continent!="EA")
+gg_input <- filter(gg_input,continent!="Oceanic")
+gg_input <- filter(gg_input,continent!="Af")
+
+
+#create a plot that shows histograms of extant vs extinct log size by continent
+ggplot(gg_input, aes(x=log_mass)) +
+  geom_histogram(binwidth=0.5) +
+  facet_grid(status~ continent)
 
